@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34723.18
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eCommerce.CLI", "Amazon.CLI\eCommerce.CLI.csproj", "{2787A102-0BF6-4DB9-9808-CD83E0646800}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.CLI", "Amazon.CLI\Amazon.CLI.csproj", "{2787A102-0BF6-4DB9-9808-CD83E0646800}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eCommerce.Library", "Amazon.Library\eCommerce.Library.csproj", "{D44B19A1-E614-469A-B8E4-9E70F41ED9BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amazon.Library", "Amazon.Library\Amazon.Library.csproj", "{D44B19A1-E614-469A-B8E4-9E70F41ED9BC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eCommerce.MAUI", "eCommerce.MAUI\eCommerce.MAUI.csproj", "{8D263489-DADF-4BF5-9280-17700E4398A7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eCommerce.MAUI", "eCommerce.MAUI\eCommerce.MAUI.csproj", "{8D263489-DADF-4BF5-9280-17700E4398A7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

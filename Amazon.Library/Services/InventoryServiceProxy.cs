@@ -27,7 +27,7 @@ namespace Amazon.Library.Services
         {
             get
             {
-                if(!products.Any())
+                if (!products.Any())
                 {
                     return 1;
                 }
@@ -39,27 +39,42 @@ namespace Amazon.Library.Services
         public Product AddOrUpdate(Product p)
         {
             bool isAdd = false;
-            if(p.Id == 0)
+            if (p.Id == 0)
             {
                 isAdd = true;
                 p.Id = NextId;
             }
 
-            if(isAdd)
+            if (isAdd)
             {
                 products.Add(p);
+            }
+            else
+            {
+                var existingProduct = products.FirstOrDefault(prod => prod.Id == p.Id);
+                if (existingProduct != null)
+                {
+                    existingProduct.Name = p.Name;
+                    existingProduct.Price = p.Price;
+                    existingProduct.Quantity = p.Quantity;
+                }
             }
 
             return p;
         }
 
+        public void Delete(Product p)
+        {
+            products.RemoveAll(prod => prod.Id == p.Id);
+        }
+
         private InventoryServiceProxy()
         {
-            //TODO: remove sample data on checkin
+            //TODO: remove sample data on check-in
             products = new List<Product>{
-                new Product{Id = 1,Name = "Product 1", Price=1.75M}
-                , new Product{Id = 2,Name = "Product 2", Price=10M}
-                , new Product{Id = 3,Name = "Product 3", Price=137.11M}
+                new Product{Id = 1,Name = "Product 1", Price=1.75M, Quantity=133},
+                new Product{Id = 2,Name = "Product 2", Price=10M, Quantity=14},
+                new Product{Id = 3,Name = "Product 3", Price=137.11M, Quantity=10}
             };
         }
 

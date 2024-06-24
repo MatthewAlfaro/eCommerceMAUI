@@ -1,4 +1,4 @@
-﻿namespace eCommerce.MAUI
+namespace eCommerce.MAUI
 {
     public partial class MainPage : ContentPage
     {

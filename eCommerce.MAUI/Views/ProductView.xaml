@@ -2,8 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="eCommerce.MAUI.Views.ProductView"
-             Title="ProductView"
-             >
+             Title="ProductView">
     <VerticalStackLayout>
         <Grid>
             <Grid.ColumnDefinitions>
@@ -28,7 +27,7 @@
             <Label Text="Quantity" Grid.Row="3" Grid.Column="0"/>
             <Entry Text="{Binding Model.Quantity}" Grid.Row="3" Grid.Column="1"/>
         </Grid>
-        <Button Text="Ok" Clicked="AddClicked"/>
+        <Button Text="Ok" Clicked="OkClicked"/>
         <Button Text="Cancel" Clicked="CancelClicked"/>
     </VerticalStackLayout>
 </ContentPage>

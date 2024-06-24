@@ -1,82 +1,50 @@
 ﻿using Amazon.Library.Models;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Amazon.Library.Services
+public class ShoppingCartService
 {
-    public class ShoppingCartService
+    public static ShoppingCartService Current { get; } = new ShoppingCartService();
+
+    public ObservableCollection<Product> Cart { get; set; }
+    public decimal TotalPrice { get; set; }
+
+    private ShoppingCartService()
     {
-        private static ShoppingCartService? instance;
-        private static object instanceLock = new object();
+        Cart = new ObservableCollection<Product>();
+        TotalPrice = 0;
+    }
 
-        public ReadOnlyCollection<ShoppingCart> carts;
-
-        public ShoppingCart Cart
+    public void AddToCart(Product product, int quantity)
+    {
+        var existingProduct = Cart.FirstOrDefault(p => p.Id == product.Id);
+        if (existingProduct != null)
         {
-            get
+            existingProduct.Quantity += quantity;
+        }
+        else
+        {
+            Cart.Add(new Product
             {
-                if(carts == null || !carts.Any())
-                {
-                    return new ShoppingCart();
-                }
-                return carts?.FirstOrDefault() ?? new ShoppingCart();
-            }
+                Id = product.Id,
+                Name = product.Name,
+                Price = product.Price,
+                Quantity = quantity
+            });
         }
 
-        private ShoppingCartService() { }
+        TotalPrice += product.Price * quantity;
+    }
 
-        public static ShoppingCartService Current
-        {
-            get
-            {
-                lock (instanceLock)
-                {
-                    if (instance == null)
-                    {
-                        instance = new ShoppingCartService();
-                    }
-                }
-                return instance;
-            }
-        }
+    public void RemoveFromCart(Product product)
+    {
+        Cart.Remove(product);
+        TotalPrice -= product.Price * product.Quantity;
+    }
 
-        //public ShoppingCart AddOrUpdate(ShoppingCart c)
-        //{
-        //    //TODO: Someone do this.
-        //}
-
-        public void AddToCart(Product newProduct)
-        {
-            if(Cart == null || Cart.Contents == null)
-            {
-                return;
-            }
-
-            var existingProduct = Cart?.Contents?
-                .FirstOrDefault(existingProducts => existingProducts.Id == newProduct.Id);
-
-            var inventoryProduct = InventoryServiceProxy.Current.Products.FirstOrDefault(invProd => invProd.Id == newProduct.Id);
-            if(inventoryProduct == null)
-            {
-                return;
-            }
-            
-            inventoryProduct.Quantity -= newProduct.Quantity;
-
-            if(existingProduct != null)
-            {
-                // update
-                existingProduct.Quantity += newProduct.Quantity;
-            } else
-            {
-                //add
-                Cart.Contents.Add(newProduct);
-            }
-        }
-
+    public void ClearCart()
+    {
+        Cart.Clear();
+        TotalPrice = 0;
     }
 }

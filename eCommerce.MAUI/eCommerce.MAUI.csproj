@@ -63,10 +63,13 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\Amazon.Library\eCommerce.Library.csproj" />
+	  <ProjectReference Include="..\Amazon.Library\Amazon.Library.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="MainPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\InventoryView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

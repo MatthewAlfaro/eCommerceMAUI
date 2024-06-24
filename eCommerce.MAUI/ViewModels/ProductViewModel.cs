@@ -1,47 +1,36 @@
 ﻿using Amazon.Library.Models;
 using Amazon.Library.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace eCommerce.MAUI.ViewModels
 {
-    public class ProductViewModel
+    public class ProductViewModel : INotifyPropertyChanged
     {
-        public override string ToString()
-        {
-            if(Model == null)
-            {
-                return string.Empty;
-            }
-            return $"{Model.Id} - {Model.Name} - {Model.Price:C}";
-        }
-        public Product? Model { get; set; }
+        public Product Model { get; set; }
 
-        public string DisplayPrice
-        {
-            get
-            {
-                if (Model == null) { return string.Empty; }
-                return $"{Model.Price:C}";
-            }
-        }
+        public string DisplayPrice => Model == null ? string.Empty : $"{Model.Price:C}";
 
         public string PriceAsString
         {
             set
             {
-                if (Model == null)
+                if (Model != null && decimal.TryParse(value, out var price))
                 {
-                    return;
-                }
-                if(decimal.TryParse(value, out var price)) {
                     Model.Price = price;
-                }else
-                {
+                }
+            }
+        }
 
+        public int Quantity
+        {
+            get => Model.Quantity;
+            set
+            {
+                if (Model.Quantity != value)
+                {
+                    Model.Quantity = value;
+                    NotifyPropertyChanged();
                 }
             }
         }
@@ -51,24 +40,24 @@ namespace eCommerce.MAUI.ViewModels
             Model = new Product();
         }
 
-        public ProductViewModel(Product? model)
+        public ProductViewModel(Product model)
         {
-            if(model != null)
-            {
-                Model = model;
-            }
-            else
-            {
-                Model = new Product();
-            }
+            Model = model ?? new Product();
         }
 
-        public void Add()
+        public void AddOrUpdate()
         {
             if (Model != null)
             {
                 InventoryServiceProxy.Current.AddOrUpdate(Model);
             }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

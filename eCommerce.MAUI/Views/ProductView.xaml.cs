@@ -1,23 +1,26 @@
 using eCommerce.MAUI.ViewModels;
+using Microsoft.Maui.Controls;
 
-namespace eCommerce.MAUI.Views;
-
-public partial class ProductView : ContentPage
+namespace eCommerce.MAUI.Views
 {
-	public ProductView()
-	{
-		InitializeComponent();
-		BindingContext = new ProductViewModel();
-	}
-
-    private void CancelClicked(object sender, EventArgs e)
+    public partial class ProductView : ContentPage
     {
-		Shell.Current.GoToAsync("//Inventory");
-    }
+        public ProductView()
+        {
+            InitializeComponent();
+            BindingContext = new ProductViewModel();
+        }
 
-    private void AddClicked(object sender, EventArgs e)
-    {
-        (BindingContext as ProductViewModel).Add();
-        Shell.Current.GoToAsync("//Inventory");
+        private void CancelClicked(object sender, EventArgs e)
+        {
+            Shell.Current.GoToAsync("//Inventory");
+        }
+
+        private void OkClicked(object sender, EventArgs e)
+        {
+            var viewModel = BindingContext as ProductViewModel;
+            viewModel?.AddOrUpdate();
+            Shell.Current.GoToAsync("//Inventory");
+        }
     }
 }
