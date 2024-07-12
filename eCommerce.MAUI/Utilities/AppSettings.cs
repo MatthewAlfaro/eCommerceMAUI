@@ -2,6 +2,6 @@
 {
     public static class AppSettings
     {
-        public static decimal TaxRate { get; set; } = 0.1m; // Default to 10%
+        public static decimal TaxRate { get; set; } = 0.1m; 
     }
 }

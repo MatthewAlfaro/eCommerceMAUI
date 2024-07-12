@@ -78,7 +78,8 @@ namespace Amazon.Library.Services
             ClearCart();
             foreach (var product in wishlist.Products)
             {
-                AddToCart(product, product.Quantity, product.Price);
+                var finalPrice = product.Price * (1 - (product.MarkdownPercentage / 100m));
+                AddToCart(product, product.Quantity, finalPrice);
             }
             TotalPrice = wishlist.TotalPrice;
         }
