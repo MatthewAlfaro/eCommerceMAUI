@@ -10,7 +10,11 @@ namespace eCommerce.MAUI.Views
             InitializeComponent();
             BindingContext = new ProductViewModel();
         }
-
+        public ProductView(ProductViewModel viewModel)
+        {
+            InitializeComponent();
+            BindingContext = viewModel ?? new ProductViewModel();
+        }
         private void CancelClicked(object sender, EventArgs e)
         {
             Shell.Current.GoToAsync("//Inventory");

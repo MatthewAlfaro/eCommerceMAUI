@@ -1,33 +1,32 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:eCommerce.MAUI.Views"
              x:Class="eCommerce.MAUI.Views.ProductView"
-             Title="ProductView">
+             Title="Product">
+
     <VerticalStackLayout>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-            <Label Text="Id" Grid.Row="0" Grid.Column="0"/>
-            <Label Text="{Binding Model.Id}" Grid.Row="0" Grid.Column="1"/>
+        <Label Text="Name" />
+        <Entry Text="{Binding Model.Name}" />
 
-            <Label Text="Name" Grid.Row="1" Grid.Column="0"/>
-            <Entry Text="{Binding Model.Name}" Grid.Row="1" Grid.Column="1"/>
+        <Label Text="Description" />
+        <Entry Text="{Binding Model.Description}" />
 
-            <Label Text="Price" Grid.Row="2" Grid.Column="0"/>
-            <Entry Text="{Binding PriceAsString}" Grid.Row="2" Grid.Column="1"/>
+        <Label Text="Price" />
+        <Entry Text="{Binding PriceAsString}" Keyboard="Numeric" />
 
-            <Label Text="Quantity" Grid.Row="3" Grid.Column="0"/>
-            <Entry Text="{Binding Model.Quantity}" Grid.Row="3" Grid.Column="1"/>
-        </Grid>
-        <Button Text="Ok" Clicked="OkClicked"/>
-        <Button Text="Cancel" Clicked="CancelClicked"/>
+        <Label Text="Quantity" />
+        <Entry Text="{Binding Quantity}" Keyboard="Numeric" />
+
+        <Label Text="Is Buy One Get One Free" />
+        <Switch IsToggled="{Binding Model.IsBuyOneGetOneFree}" />
+
+        <Label Text="Markdown Percentage (%)" />
+        <Entry Text="{Binding MarkdownPercentage}" Keyboard="Numeric" />
+
+        <HorizontalStackLayout>
+            <Button Text="Cancel" Clicked="CancelClicked" />
+            <Button Text="OK" Clicked="OkClicked" />
+        </HorizontalStackLayout>
     </VerticalStackLayout>
 </ContentPage>

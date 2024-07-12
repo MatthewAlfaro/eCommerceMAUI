@@ -1,5 +1,6 @@
 ﻿using Amazon.Library.Models;
 using Amazon.Library.Services;
+using eCommerce.MAUI.Utilities;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -9,72 +10,94 @@ namespace eCommerce.MAUI.ViewModels
 {
     public class ShopViewModel : INotifyPropertyChanged
     {
-        private ObservableCollection<ProductViewModel> _products;
-        private decimal _totalPrice;
-
-        public ObservableCollection<ProductViewModel> Products
-        {
-            get => _products;
-            set
-            {
-                _products = value;
-                NotifyPropertyChanged();
-            }
-        }
+        private readonly ShoppingCartService _shoppingCartService;
+        public ObservableCollection<ProductViewModel> Products { get; private set; }
+        public ObservableCollection<ProductViewModel> CartItems { get; private set; }
+        public ObservableCollection<Wishlist> Wishlists { get; private set; }
 
         public decimal TotalPrice
         {
-            get => _totalPrice;
-            set
-            {
-                _totalPrice = value;
-                NotifyPropertyChanged();
-            }
+            get => _shoppingCartService.TotalPrice * (1 + AppSettings.TaxRate);
         }
 
         public ShopViewModel()
         {
-            _products = new ObservableCollection<ProductViewModel>();
-            _totalPrice = 0;
+            _shoppingCartService = ShoppingCartService.Current;
+            Products = new ObservableCollection<ProductViewModel>();
+            CartItems = new ObservableCollection<ProductViewModel>();
+            Wishlists = _shoppingCartService.Wishlists;
 
-            Refresh();
+            LoadProducts();
         }
 
-        public void Refresh()
+        private void LoadProducts()
         {
-            Products = new ObservableCollection<ProductViewModel>(
-                InventoryServiceProxy.Current.Products.Select(p => new ProductViewModel(p))
-            );
+            var products = InventoryServiceProxy.Current.Products;
+            Products.Clear();
+            foreach (var product in products)
+            {
+                Products.Add(new ProductViewModel(product));
+            }
         }
 
         public void AddToCart(ProductViewModel productViewModel, int quantity)
         {
             var product = productViewModel.Model;
 
+            var finalPrice = product.Price * (1 - (product.MarkdownPercentage / 100m));
+
             if (product.Quantity < quantity)
             {
-                // Handle insufficient quantity case
                 return;
             }
 
-            // Decrement quantity in inventory
             product.Quantity -= quantity;
 
-            // Update the inventory
             InventoryServiceProxy.Current.AddOrUpdate(product);
 
-            // Add the product to the cart
-            ShoppingCartService.Current.AddToCart(product, quantity);
+            _shoppingCartService.AddToCart(product, quantity, finalPrice);
 
-            // Update total price by adding the item price
-            TotalPrice = ShoppingCartService.Current.TotalPrice;
+            UpdateCartItems();
+        }
 
-            // Refresh the product list to reflect updated quantities
-            Refresh();
-
-            // Notify UI of changes
-            NotifyPropertyChanged(nameof(Products));
+        private void UpdateCartItems()
+        {
+            CartItems.Clear();
+            foreach (var item in _shoppingCartService.Cart)
+            {
+                CartItems.Add(new ProductViewModel(item));
+            }
+            NotifyPropertyChanged(nameof(CartItems));
             NotifyPropertyChanged(nameof(TotalPrice));
+        }
+
+        private int CalculateEffectiveQuantity(Product product, int quantity)
+        {
+            return product.IsBuyOneGetOneFree ? quantity * 2 : quantity;
+        }
+
+        public void Checkout()
+        {
+            foreach (var item in _shoppingCartService.Cart.ToList()) 
+            {
+                var product = InventoryServiceProxy.Current.Products.FirstOrDefault(p => p.Id == item.Id);
+                if (product != null)
+                {
+                    int quantityToDeduct = CalculateEffectiveQuantity(item, item.Quantity);
+                    product.Quantity -= quantityToDeduct;
+                    InventoryServiceProxy.Current.AddOrUpdate(product);
+                }
+            }
+
+            _shoppingCartService.Checkout();
+            UpdateCartItems();
+            LoadProducts();
+        }
+
+        public void LoadWishlist(Wishlist wishlist)
+        {
+            _shoppingCartService.LoadWishlist(wishlist);
+            UpdateCartItems();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

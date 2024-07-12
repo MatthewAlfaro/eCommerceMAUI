@@ -47,7 +47,7 @@ namespace eCommerce.MAUI.ViewModels
             if (product != null)
             {
                 InventoryServiceProxy.Current.Delete(product);
-                Refresh(); // Update the product list after deletion
+                Refresh(); 
             }
         }
 

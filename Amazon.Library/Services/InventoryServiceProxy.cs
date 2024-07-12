@@ -3,17 +3,17 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Amazon.Library.Services
 {
     public class InventoryServiceProxy
     {
         private static InventoryServiceProxy? instance;
-        private static object instanceLock = new object();
+        private static readonly object instanceLock = new object();
 
         private List<Product> products;
+
+        public event Action InventoryUpdated;
 
         public ReadOnlyCollection<Product> Products
         {
@@ -57,8 +57,12 @@ namespace Amazon.Library.Services
                     existingProduct.Name = p.Name;
                     existingProduct.Price = p.Price;
                     existingProduct.Quantity = p.Quantity;
+                    existingProduct.IsBuyOneGetOneFree = p.IsBuyOneGetOneFree;
+                    existingProduct.MarkdownPercentage = p.MarkdownPercentage;
                 }
             }
+
+            InventoryUpdated?.Invoke(); 
 
             return p;
         }
@@ -66,15 +70,16 @@ namespace Amazon.Library.Services
         public void Delete(Product p)
         {
             products.RemoveAll(prod => prod.Id == p.Id);
+            InventoryUpdated?.Invoke(); 
         }
 
         private InventoryServiceProxy()
         {
             //TODO: remove sample data on check-in
             products = new List<Product>{
-                new Product{Id = 1,Name = "Product 1", Price=1.75M, Quantity=133},
-                new Product{Id = 2,Name = "Product 2", Price=10M, Quantity=14},
-                new Product{Id = 3,Name = "Product 3", Price=137.11M, Quantity=10}
+                new Product{Id = 1,Name = "Peanut Butter", Price=5.00M, Quantity=200},
+                new Product{Id = 2,Name = "Jelly", Price=20.00M, Quantity=100},
+                new Product{Id = 3,Name = "Bread", Price= 100.00M, Quantity=800}
             };
         }
 

@@ -18,6 +18,7 @@ namespace eCommerce.MAUI.ViewModels
                 if (Model != null && decimal.TryParse(value, out var price))
                 {
                     Model.Price = price;
+                    NotifyPropertyChanged(nameof(DisplayPrice));
                 }
             }
         }
@@ -30,6 +31,32 @@ namespace eCommerce.MAUI.ViewModels
                 if (Model.Quantity != value)
                 {
                     Model.Quantity = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        public bool IsBuyOneGetOneFree
+        {
+            get => Model.IsBuyOneGetOneFree;
+            set
+            {
+                if (Model.IsBuyOneGetOneFree != value)
+                {
+                    Model.IsBuyOneGetOneFree = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        public decimal MarkdownPercentage
+        {
+            get => Model.MarkdownPercentage;
+            set
+            {
+                if (Model.MarkdownPercentage != value)
+                {
+                    Model.MarkdownPercentage = value;
                     NotifyPropertyChanged();
                 }
             }

@@ -18,6 +18,14 @@ namespace eCommerce.MAUI
         {
             Shell.Current.GoToAsync("//Shop");
         }
+        private void ConfigurationClicked(object sender, EventArgs e)
+        {
+            Shell.Current.GoToAsync("//Configuration");
+        }
+        private void WishlistClicked(object sender, EventArgs e)
+        {
+            Shell.Current.GoToAsync("//WishList");
+        }
     }
 
 }

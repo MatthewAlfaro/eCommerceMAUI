@@ -13,6 +13,12 @@
             <Button 
                 Text="Shop"
                 Clicked="ShopClicked"/>
+            <Button 
+                Text="Configuration"
+                Clicked="ConfigurationClicked"/>
+            <Button 
+                Text="Wish List"
+                Clicked="WishlistClicked"/>
         </VerticalStackLayout>
     </ScrollView>
 

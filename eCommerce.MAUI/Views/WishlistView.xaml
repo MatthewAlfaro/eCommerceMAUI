@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="eCommerce.MAUI.Views.ShopView"
-             Title="ShopView">
+             x:Class="eCommerce.MAUI.Views.WishlistView"
+             Title="Wishlist">
     <VerticalStackLayout>
         <ListView ItemsSource="{Binding Products}">
             <ListView.ItemTemplate>
@@ -47,25 +47,8 @@
         </ListView>
 
         <Label Text="{Binding TotalPrice, StringFormat='Total: {0:C}'}" FontSize="Large" HorizontalOptions="Center"/>
-        <Button Text="Checkout" Clicked="CheckoutClicked"/>
+        <Entry x:Name="wishlistNameEntry" Placeholder="Wishlist Name"/>
+        <Button Text="Save Wishlist" Clicked="SaveWishlistClicked"/>
         <Button Text="Cancel" Clicked="CancelClicked"/>
-
-        <ListView ItemsSource="{Binding Wishlists}">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <ViewCell>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                            <Label Grid.Column="0" Text="{Binding Name}" />
-                            <Label Grid.Column="1" Text="{Binding TotalPrice, StringFormat='{0:C}'}" />
-                            <Button Text="Load Wishlist" Clicked="LoadWishlistClicked" CommandParameter="{Binding .}" />
-                        </Grid>
-                    </ViewCell>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
     </VerticalStackLayout>
 </ContentPage>

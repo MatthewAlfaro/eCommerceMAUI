@@ -1,15 +1,14 @@
 using eCommerce.MAUI.ViewModels;
 using Microsoft.Maui.Controls;
-using Amazon.Library.Models;
 
 namespace eCommerce.MAUI.Views
 {
-    public partial class ShopView : ContentPage
+    public partial class WishlistView : ContentPage
     {
-        public ShopView()
+        public WishlistView()
         {
             InitializeComponent();
-            BindingContext = new ShopViewModel();
+            BindingContext = new WishlistViewModel();
         }
 
         private void AddToCartClicked(object sender, EventArgs e)
@@ -22,32 +21,26 @@ namespace eCommerce.MAUI.Views
                 var entry = button?.Parent?.FindByName<Entry>("quantityEntry");
                 if (entry != null && int.TryParse(entry.Text, out int quantity))
                 {
-                    (BindingContext as ShopViewModel)?.AddToCart(productViewModel, quantity);
+                    (BindingContext as WishlistViewModel)?.AddToCart(productViewModel, quantity);
 
                     entry.Text = string.Empty;
                 }
             }
         }
 
-        private void CheckoutClicked(object sender, EventArgs e)
+        private void SaveWishlistClicked(object sender, EventArgs e)
         {
-            (BindingContext as ShopViewModel)?.Checkout();
+            var wishlistName = wishlistNameEntry.Text;
+            if (!string.IsNullOrEmpty(wishlistName))
+            {
+                (BindingContext as WishlistViewModel)?.SaveWishlist(wishlistName);
+                Shell.Current.GoToAsync("//Shop");
+            }
         }
 
         private void CancelClicked(object sender, EventArgs e)
         {
-            Shell.Current.GoToAsync("//MainPage");
-        }
-
-        private void LoadWishlistClicked(object sender, EventArgs e)
-        {
-            var button = sender as Button;
-            var wishlist = button?.CommandParameter as Wishlist;
-
-            if (wishlist != null)
-            {
-                (BindingContext as ShopViewModel)?.LoadWishlist(wishlist);
-            }
+            Shell.Current.GoToAsync("//Shop");
         }
     }
 }
