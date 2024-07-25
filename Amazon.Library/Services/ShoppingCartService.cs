@@ -41,8 +41,6 @@ namespace Amazon.Library.Services
                     Name = product.Name,
                     Price = finalPrice,
                     Quantity = quantity,
-                    IsBuyOneGetOneFree = product.IsBuyOneGetOneFree, 
-                    MarkdownPercentage = product.MarkdownPercentage, 
                 });
             }
 
@@ -51,8 +49,12 @@ namespace Amazon.Library.Services
 
         public void RemoveFromCart(Product product)
         {
-            Cart.Remove(product);
-            TotalPrice -= product.Price * product.Quantity;
+            var existingProduct = Cart.FirstOrDefault(p => p.Id == product.Id);
+            if (existingProduct != null)
+            {
+                TotalPrice -= existingProduct.Price * existingProduct.Quantity;
+                Cart.Remove(existingProduct);
+            }
         }
 
         public void ClearCart()
@@ -63,14 +65,24 @@ namespace Amazon.Library.Services
 
         public void SaveWishlist(string name)
         {
-            var wishlist = new Wishlist
+            var existingWishlist = Wishlists.FirstOrDefault(w => w.Name == name);
+            if (existingWishlist != null)
             {
-                Name = name,
-                Products = new List<Product>(Cart),
-                TotalPrice = TotalPrice
-            };
-            Wishlists.Add(wishlist);
-            ClearCart(); 
+                existingWishlist.Products = new List<Product>(Cart);
+                existingWishlist.TotalPrice = TotalPrice;
+            }
+            else
+            {
+                var wishlist = new Wishlist
+                {
+                    Name = name,
+                    Products = new List<Product>(Cart),
+                    TotalPrice = TotalPrice
+                };
+                Wishlists.Add(wishlist);
+            }
+
+            ClearCart();
         }
 
         public void LoadWishlist(Wishlist wishlist)
@@ -78,10 +90,13 @@ namespace Amazon.Library.Services
             ClearCart();
             foreach (var product in wishlist.Products)
             {
-                var finalPrice = product.Price * (1 - (product.MarkdownPercentage / 100m));
-                AddToCart(product, product.Quantity, finalPrice);
+                AddToCart(product, product.Quantity, product.Price);
             }
-            TotalPrice = wishlist.TotalPrice;
+        }
+
+        public void DeleteWishlist(Wishlist wishlist)
+        {
+            Wishlists.Remove(wishlist);
         }
 
         public void Checkout()

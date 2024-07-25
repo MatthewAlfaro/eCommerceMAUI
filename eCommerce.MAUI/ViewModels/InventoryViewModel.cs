@@ -1,4 +1,5 @@
-﻿using Amazon.Library.Models;
+﻿
+using Amazon.Library.Models;
 using Amazon.Library.Services;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -29,7 +30,7 @@ namespace eCommerce.MAUI.ViewModels
 
         public void Refresh()
         {
-            Products = InventoryServiceProxy.Current.Products
+            Products = InventoryService.Current.Products
                 .Select(p => new ProductViewModel(p))
                 .ToList();
         }
@@ -46,8 +47,8 @@ namespace eCommerce.MAUI.ViewModels
             var product = productViewModel.Model;
             if (product != null)
             {
-                InventoryServiceProxy.Current.Delete(product);
-                Refresh(); 
+                InventoryService.Current.Delete(product);
+                Refresh();
             }
         }
 

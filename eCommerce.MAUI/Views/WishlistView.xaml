@@ -2,7 +2,8 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="eCommerce.MAUI.Views.WishlistView"
-             Title="Wishlist">
+             Title="Wish List Creator"
+             x:Name="wishlistPage">
     <VerticalStackLayout>
         <ListView ItemsSource="{Binding Products}">
             <ListView.ItemTemplate>
@@ -37,9 +38,11 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <Label Grid.Column="0" Text="{Binding Model.Name}" />
                             <Label Grid.Column="1" Text="{Binding Quantity}" />
+                            <Button Grid.Column="2" Text="Remove" Command="{Binding Path=BindingContext.RemoveFromCartCommand, Source={x:Reference wishlistPage}}" CommandParameter="{Binding .}" />
                         </Grid>
                     </ViewCell>
                 </DataTemplate>
@@ -49,6 +52,22 @@
         <Label Text="{Binding TotalPrice, StringFormat='Total: {0:C}'}" FontSize="Large" HorizontalOptions="Center"/>
         <Entry x:Name="wishlistNameEntry" Placeholder="Wishlist Name"/>
         <Button Text="Save Wishlist" Clicked="SaveWishlistClicked"/>
+
+        <!-- Wishlist Management -->
+        <ListView ItemsSource="{Binding Wishlists}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="{Binding Name}" />
+                            <Button Text="Load" Clicked="LoadWishlistClicked" CommandParameter="{Binding .}" />
+                            <Button Text="Delete" Clicked="DeleteWishlistClicked" CommandParameter="{Binding .}" />
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
         <Button Text="Cancel" Clicked="CancelClicked"/>
     </VerticalStackLayout>
 </ContentPage>

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local="clr-namespace:eCommerce.MAUI.Views"
              x:Class="eCommerce.MAUI.Views.ProductView"
              Title="Product">
 
@@ -18,8 +17,8 @@
         <Label Text="Quantity" />
         <Entry Text="{Binding Quantity}" Keyboard="Numeric" />
 
-        <Label Text="Is Buy One Get One Free" />
-        <Switch IsToggled="{Binding Model.IsBuyOneGetOneFree}" />
+        <Label Text="Buy One Get One Free" />
+        <Switch IsToggled="{Binding IsBuyOneGetOneFree}" />
 
         <Label Text="Markdown Percentage (%)" />
         <Entry Text="{Binding MarkdownPercentage}" Keyboard="Numeric" />

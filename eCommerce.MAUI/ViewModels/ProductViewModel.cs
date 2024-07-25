@@ -76,7 +76,7 @@ namespace eCommerce.MAUI.ViewModels
         {
             if (Model != null)
             {
-                InventoryServiceProxy.Current.AddOrUpdate(Model);
+                InventoryService.Current.AddOrUpdate(Model);
             }
         }
 

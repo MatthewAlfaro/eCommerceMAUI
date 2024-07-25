@@ -1,6 +1,6 @@
+using Amazon.Library.Models;
 using eCommerce.MAUI.ViewModels;
 using Microsoft.Maui.Controls;
-using Amazon.Library.Models;
 
 namespace eCommerce.MAUI.Views
 {
@@ -10,6 +10,11 @@ namespace eCommerce.MAUI.Views
         {
             InitializeComponent();
             BindingContext = new ShopViewModel();
+        }
+
+        private void CancelClicked(object sender, EventArgs e)
+        {
+            Shell.Current.GoToAsync("//MainPage");
         }
 
         private void AddToCartClicked(object sender, EventArgs e)
@@ -24,21 +29,11 @@ namespace eCommerce.MAUI.Views
                 {
                     (BindingContext as ShopViewModel)?.AddToCart(productViewModel, quantity);
 
+                    // Clear the quantity entry after adding to cart
                     entry.Text = string.Empty;
                 }
             }
         }
-
-        private void CheckoutClicked(object sender, EventArgs e)
-        {
-            (BindingContext as ShopViewModel)?.Checkout();
-        }
-
-        private void CancelClicked(object sender, EventArgs e)
-        {
-            Shell.Current.GoToAsync("//MainPage");
-        }
-
         private void LoadWishlistClicked(object sender, EventArgs e)
         {
             var button = sender as Button;
@@ -51,3 +46,4 @@ namespace eCommerce.MAUI.Views
         }
     }
 }
+

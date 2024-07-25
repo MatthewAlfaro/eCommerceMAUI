@@ -11,13 +11,13 @@
                 Text="Manage Inventory" 
                 Clicked="ManageInventoryClicked"/>
             <Button 
-                Text="Shop"
+                Text="The Shop"
                 Clicked="ShopClicked"/>
             <Button 
-                Text="Configuration"
+                Text="Configurations"
                 Clicked="ConfigurationClicked"/>
             <Button 
-                Text="Wish List"
+                Text="Wish Lists"
                 Clicked="WishlistClicked"/>
         </VerticalStackLayout>
     </ScrollView>

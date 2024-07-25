@@ -5,6 +5,8 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Windows.Input;
+using Microsoft.Maui.Controls;
 
 namespace eCommerce.MAUI.ViewModels
 {
@@ -15,10 +17,11 @@ namespace eCommerce.MAUI.ViewModels
         public ObservableCollection<ProductViewModel> CartItems { get; private set; }
         public ObservableCollection<Wishlist> Wishlists { get; private set; }
 
-        public decimal TotalPrice
-        {
-            get => _shoppingCartService.TotalPrice * (1 + AppSettings.TaxRate);
-        }
+        public decimal TotalPrice => _shoppingCartService.TotalPrice * (1 + AppSettings.TaxRate);
+
+        public ICommand RemoveFromCartCommand { get; private set; }
+        public ICommand CheckoutCommand { get; private set; }
+        public ICommand LoadWishlistCommand { get; private set; }
 
         public ShopViewModel()
         {
@@ -27,12 +30,16 @@ namespace eCommerce.MAUI.ViewModels
             CartItems = new ObservableCollection<ProductViewModel>();
             Wishlists = _shoppingCartService.Wishlists;
 
+            RemoveFromCartCommand = new Command<ProductViewModel>(RemoveFromCart);
+            CheckoutCommand = new Command(Checkout);
+            LoadWishlistCommand = new Command<Wishlist>(LoadWishlist);
+
             LoadProducts();
         }
 
         private void LoadProducts()
         {
-            var products = InventoryServiceProxy.Current.Products;
+            var products = InventoryService.Current.Products;
             Products.Clear();
             foreach (var product in products)
             {
@@ -51,12 +58,15 @@ namespace eCommerce.MAUI.ViewModels
                 return;
             }
 
-            product.Quantity -= quantity;
-
-            InventoryServiceProxy.Current.AddOrUpdate(product);
-
             _shoppingCartService.AddToCart(product, quantity, finalPrice);
 
+            UpdateCartItems();
+        }
+
+        public void RemoveFromCart(ProductViewModel productViewModel)
+        {
+            var product = productViewModel.Model;
+            _shoppingCartService.RemoveFromCart(product);
             UpdateCartItems();
         }
 
@@ -71,21 +81,16 @@ namespace eCommerce.MAUI.ViewModels
             NotifyPropertyChanged(nameof(TotalPrice));
         }
 
-        private int CalculateEffectiveQuantity(Product product, int quantity)
-        {
-            return product.IsBuyOneGetOneFree ? quantity * 2 : quantity;
-        }
-
         public void Checkout()
         {
-            foreach (var item in _shoppingCartService.Cart.ToList()) 
+            foreach (var item in _shoppingCartService.Cart.ToList())
             {
-                var product = InventoryServiceProxy.Current.Products.FirstOrDefault(p => p.Id == item.Id);
+                var product = InventoryService.Current.Products.FirstOrDefault(p => p.Id == item.Id);
                 if (product != null)
                 {
-                    int quantityToDeduct = CalculateEffectiveQuantity(item, item.Quantity);
+                    int quantityToDeduct = product.IsBuyOneGetOneFree ? item.Quantity * 2 : item.Quantity;
                     product.Quantity -= quantityToDeduct;
-                    InventoryServiceProxy.Current.AddOrUpdate(product);
+                    InventoryService.Current.AddOrUpdate(product);
                 }
             }
 
@@ -96,7 +101,12 @@ namespace eCommerce.MAUI.ViewModels
 
         public void LoadWishlist(Wishlist wishlist)
         {
-            _shoppingCartService.LoadWishlist(wishlist);
+            _shoppingCartService.ClearCart();
+            foreach (var product in wishlist.Products)
+            {
+                var finalPrice = product.Price * (1 - (product.MarkdownPercentage / 100m));
+                _shoppingCartService.AddToCart(product, product.Quantity, finalPrice);
+            }
             UpdateCartItems();
         }
 

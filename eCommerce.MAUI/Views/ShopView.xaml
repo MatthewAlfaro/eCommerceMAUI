@@ -2,8 +2,10 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="eCommerce.MAUI.Views.ShopView"
-             Title="ShopView">
+             x:Name="Page"
+             Title="The Shop">
     <VerticalStackLayout>
+        <!-- Inventory List -->
         <ListView ItemsSource="{Binding Products}">
             <ListView.ItemTemplate>
                 <DataTemplate>
@@ -29,6 +31,7 @@
             </ListView.ItemTemplate>
         </ListView>
 
+        <!-- Cart Items List -->
         <ListView ItemsSource="{Binding CartItems}">
             <ListView.ItemTemplate>
                 <DataTemplate>
@@ -37,9 +40,11 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <Label Grid.Column="0" Text="{Binding Model.Name}" />
                             <Label Grid.Column="1" Text="{Binding Quantity}" />
+                            <Button Grid.Column="2" Text="Remove" Command="{Binding Path=BindingContext.RemoveFromCartCommand, Source={x:Reference Page}}" CommandParameter="{Binding .}" />
                         </Grid>
                     </ViewCell>
                 </DataTemplate>
@@ -47,9 +52,10 @@
         </ListView>
 
         <Label Text="{Binding TotalPrice, StringFormat='Total: {0:C}'}" FontSize="Large" HorizontalOptions="Center"/>
-        <Button Text="Checkout" Clicked="CheckoutClicked"/>
-        <Button Text="Cancel" Clicked="CancelClicked"/>
+        <Button Text="Checkout" Command="{Binding CheckoutCommand}"/>
 
+        <!-- Wishlist Section -->
+        <Label Text="Wishlists" FontSize="Large" HorizontalOptions="Center"/>
         <ListView ItemsSource="{Binding Wishlists}">
             <ListView.ItemTemplate>
                 <DataTemplate>
@@ -61,11 +67,13 @@
                             </Grid.ColumnDefinitions>
                             <Label Grid.Column="0" Text="{Binding Name}" />
                             <Label Grid.Column="1" Text="{Binding TotalPrice, StringFormat='{0:C}'}" />
-                            <Button Text="Load Wishlist" Clicked="LoadWishlistClicked" CommandParameter="{Binding .}" />
+                            <Button Text="{Binding Name}" Clicked="LoadWishlistClicked" CommandParameter="{Binding .}" />
                         </Grid>
                     </ViewCell>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
+
+        <Button Text="Cancel" Clicked="CancelClicked"/>
     </VerticalStackLayout>
 </ContentPage>

@@ -1,8 +1,11 @@
-﻿using Amazon.Library.Models;
-using Amazon.Library.Services;
+﻿using Amazon.Library.Services;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Windows.Input;
+using Microsoft.Maui.Controls;
+using Amazon.Library.Models;
 
 namespace eCommerce.MAUI.ViewModels
 {
@@ -10,18 +13,27 @@ namespace eCommerce.MAUI.ViewModels
     {
         public ObservableCollection<ProductViewModel> Products { get; private set; }
         public ObservableCollection<ProductViewModel> CartItems { get; private set; }
+        public ObservableCollection<Wishlist> Wishlists => ShoppingCartService.Current.Wishlists;
         public decimal TotalPrice => ShoppingCartService.Current.TotalPrice;
+
+        public ICommand LoadWishlistCommand { get; private set; }
+        public ICommand DeleteWishlistCommand { get; private set; }
+        public ICommand RemoveFromCartCommand { get; private set; }
 
         public WishlistViewModel()
         {
             Products = new ObservableCollection<ProductViewModel>();
             CartItems = new ObservableCollection<ProductViewModel>();
+            LoadWishlistCommand = new Command<Wishlist>(LoadWishlist);
+            DeleteWishlistCommand = new Command<Wishlist>(DeleteWishlist);
+            RemoveFromCartCommand = new Command<ProductViewModel>(RemoveFromCart);
+
             LoadProducts();
         }
 
         private void LoadProducts()
         {
-            var products = InventoryServiceProxy.Current.Products;
+            var products = InventoryService.Current.Products;
             Products.Clear();
             foreach (var product in products)
             {
@@ -32,10 +44,15 @@ namespace eCommerce.MAUI.ViewModels
         public void AddToCart(ProductViewModel productViewModel, int quantity)
         {
             var product = productViewModel.Model;
-
             var finalPrice = product.Price * (1 - (product.MarkdownPercentage / 100m));
-
             ShoppingCartService.Current.AddToCart(product, quantity, finalPrice);
+            UpdateCartItems();
+        }
+
+        public void RemoveFromCart(ProductViewModel productViewModel)
+        {
+            var product = productViewModel.Model;
+            ShoppingCartService.Current.RemoveFromCart(product);
             UpdateCartItems();
         }
 
@@ -53,7 +70,20 @@ namespace eCommerce.MAUI.ViewModels
         public void SaveWishlist(string name)
         {
             ShoppingCartService.Current.SaveWishlist(name);
-            UpdateCartItems(); 
+            UpdateCartItems();
+            NotifyPropertyChanged(nameof(Wishlists));
+        }
+
+        public void LoadWishlist(Wishlist wishlist)
+        {
+            ShoppingCartService.Current.LoadWishlist(wishlist);
+            UpdateCartItems();
+        }
+
+        public void DeleteWishlist(Wishlist wishlist)
+        {
+            ShoppingCartService.Current.DeleteWishlist(wishlist);
+            NotifyPropertyChanged(nameof(Wishlists));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

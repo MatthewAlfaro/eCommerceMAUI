@@ -6,9 +6,9 @@ using System.Linq;
 
 namespace Amazon.Library.Services
 {
-    public class InventoryServiceProxy
+    public class InventoryService
     {
-        private static InventoryServiceProxy? instance;
+        private static InventoryService? instance;
         private static readonly object instanceLock = new object();
 
         private List<Product> products;
@@ -57,7 +57,6 @@ namespace Amazon.Library.Services
                     existingProduct.Name = p.Name;
                     existingProduct.Price = p.Price;
                     existingProduct.Quantity = p.Quantity;
-                    existingProduct.IsBuyOneGetOneFree = p.IsBuyOneGetOneFree;
                     existingProduct.MarkdownPercentage = p.MarkdownPercentage;
                 }
             }
@@ -73,7 +72,7 @@ namespace Amazon.Library.Services
             InventoryUpdated?.Invoke(); 
         }
 
-        private InventoryServiceProxy()
+        private InventoryService()
         {
             //TODO: remove sample data on check-in
             products = new List<Product>{
@@ -83,7 +82,7 @@ namespace Amazon.Library.Services
             };
         }
 
-        public static InventoryServiceProxy Current
+        public static InventoryService Current
         {
             get
             {
@@ -91,7 +90,7 @@ namespace Amazon.Library.Services
                 {
                     if (instance == null)
                     {
-                        instance = new InventoryServiceProxy();
+                        instance = new InventoryService();
                     }
                 }
                 return instance;

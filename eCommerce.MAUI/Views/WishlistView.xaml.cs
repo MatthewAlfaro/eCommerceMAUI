@@ -1,3 +1,4 @@
+using Amazon.Library.Models;
 using eCommerce.MAUI.ViewModels;
 using Microsoft.Maui.Controls;
 
@@ -34,13 +35,28 @@ namespace eCommerce.MAUI.Views
             if (!string.IsNullOrEmpty(wishlistName))
             {
                 (BindingContext as WishlistViewModel)?.SaveWishlist(wishlistName);
-                Shell.Current.GoToAsync("//Shop");
             }
+        }
+
+        private void LoadWishlistClicked(object sender, EventArgs e)
+        {
+            var button = sender as Button;
+            var wishlist = button?.CommandParameter as Wishlist;
+            var viewModel = BindingContext as WishlistViewModel;
+            viewModel?.LoadWishlist(wishlist);
+        }
+
+        private void DeleteWishlistClicked(object sender, EventArgs e)
+        {
+            var button = sender as Button;
+            var wishlist = button?.CommandParameter as Wishlist;
+            var viewModel = BindingContext as WishlistViewModel;
+            viewModel?.DeleteWishlist(wishlist);
         }
 
         private void CancelClicked(object sender, EventArgs e)
         {
-            Shell.Current.GoToAsync("//Shop");
+            Shell.Current.GoToAsync("//MainPage");
         }
     }
 }
