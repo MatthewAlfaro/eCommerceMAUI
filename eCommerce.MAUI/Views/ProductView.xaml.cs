@@ -18,6 +18,7 @@ namespace eCommerce.MAUI.Views
 
         private void OkClicked(object sender, EventArgs e)
         {
+            // Save the product and navigate back to the InventoryView
             var viewModel = BindingContext as ProductViewModel;
             viewModel?.AddOrUpdate();
             Shell.Current.GoToAsync("//Inventory");

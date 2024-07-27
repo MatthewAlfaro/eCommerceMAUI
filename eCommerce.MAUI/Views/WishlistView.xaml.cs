@@ -14,6 +14,7 @@ namespace eCommerce.MAUI.Views
 
         private void AddToCartClicked(object sender, EventArgs e)
         {
+            // Add product to the cart
             var button = sender as Button;
             var productViewModel = button?.CommandParameter as ProductViewModel;
 
@@ -31,27 +32,30 @@ namespace eCommerce.MAUI.Views
 
         private void SaveWishlistClicked(object sender, EventArgs e)
         {
+            // Save the current cart as a wishlist
             var wishlistName = wishlistNameEntry.Text;
             if (!string.IsNullOrEmpty(wishlistName))
             {
-                (BindingContext as WishlistViewModel)?.SaveWishlist(wishlistName);
+                (BindingContext as WishlistViewModel)?.SaveShoppingCart(wishlistName);
             }
         }
 
-        private void LoadWishlistClicked(object sender, EventArgs e)
+        private void LoadShoppingCartClicked(object sender, EventArgs e)
         {
+            // Load the selected shopping cart
             var button = sender as Button;
-            var wishlist = button?.CommandParameter as Wishlist;
+            var shoppingCart = button?.CommandParameter as ShoppingCart;
             var viewModel = BindingContext as WishlistViewModel;
-            viewModel?.LoadWishlist(wishlist);
+            viewModel?.LoadShoppingCart(shoppingCart);
         }
 
-        private void DeleteWishlistClicked(object sender, EventArgs e)
+        private void DeleteShoppingCartClicked(object sender, EventArgs e)
         {
+            // Delete the selected shopping cart
             var button = sender as Button;
-            var wishlist = button?.CommandParameter as Wishlist;
+            var shoppingCart = button?.CommandParameter as ShoppingCart;
             var viewModel = BindingContext as WishlistViewModel;
-            viewModel?.DeleteWishlist(wishlist);
+            viewModel?.DeleteShoppingCart(shoppingCart);
         }
 
         private void CancelClicked(object sender, EventArgs e)

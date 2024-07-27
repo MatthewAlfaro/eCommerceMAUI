@@ -5,6 +5,7 @@
              x:Name="Page"
              Title="The Shop">
     <VerticalStackLayout>
+        
         <!-- Inventory List -->
         <ListView ItemsSource="{Binding Products}">
             <ListView.ItemTemplate>
@@ -19,10 +20,14 @@
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
+                            
+                            <!-- Product Details -->
                             <Label Grid.Column="0" Text="{Binding Model.Id}" />
                             <Label Grid.Column="1" Text="{Binding DisplayPrice}" />
                             <Label Grid.Column="2" Text="{Binding Model.Name}" />
                             <Label Grid.Column="3" Text="{Binding Quantity}" />
+                            
+                            <!-- Add to Cart -->
                             <Entry Grid.Column="4" Placeholder="Qty" x:Name="quantityEntry" WidthRequest="50"/>
                             <Button Grid.Column="5" Text="Add to Cart" Clicked="AddToCartClicked" CommandParameter="{Binding .}" />
                         </Grid>
@@ -42,6 +47,7 @@
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
+                            <!-- Cart Item Details -->
                             <Label Grid.Column="0" Text="{Binding Model.Name}" />
                             <Label Grid.Column="1" Text="{Binding Quantity}" />
                             <Button Grid.Column="2" Text="Remove" Command="{Binding Path=BindingContext.RemoveFromCartCommand, Source={x:Reference Page}}" CommandParameter="{Binding .}" />
@@ -51,12 +57,13 @@
             </ListView.ItemTemplate>
         </ListView>
 
+        <!-- Total Price and Checkout -->
         <Label Text="{Binding TotalPrice, StringFormat='Total: {0:C}'}" FontSize="Large" HorizontalOptions="Center"/>
         <Button Text="Checkout" Command="{Binding CheckoutCommand}"/>
 
-        <!-- Wishlist Section -->
-        <Label Text="Wishlists" FontSize="Large" HorizontalOptions="Center"/>
-        <ListView ItemsSource="{Binding Wishlists}">
+        <!-- Shopping Cart Section -->
+        <Label Text="Your Wish Lists" FontSize="Large" HorizontalOptions="Center"/>
+        <ListView ItemsSource="{Binding ShoppingCarts}">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
@@ -65,9 +72,11 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
+                            
+                            <!-- Shopping Cart Details -->
                             <Label Grid.Column="0" Text="{Binding Name}" />
                             <Label Grid.Column="1" Text="{Binding TotalPrice, StringFormat='{0:C}'}" />
-                            <Button Text="{Binding Name}" Clicked="LoadWishlistClicked" CommandParameter="{Binding .}" />
+                            <Button Text="{Binding Name}" Clicked="LoadShoppingCartClicked" CommandParameter="{Binding .}" />
                         </Grid>
                     </ViewCell>
                 </DataTemplate>

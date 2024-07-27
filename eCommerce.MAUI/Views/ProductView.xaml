@@ -5,6 +5,7 @@
              Title="Product">
 
     <VerticalStackLayout>
+        <!-- Product Details -->
         <Label Text="Name" />
         <Entry Text="{Binding Model.Name}" />
 
@@ -23,6 +24,7 @@
         <Label Text="Markdown Percentage (%)" />
         <Entry Text="{Binding MarkdownPercentage}" Keyboard="Numeric" />
 
+        <!-- Action Buttons -->
         <HorizontalStackLayout>
             <Button Text="Cancel" Clicked="CancelClicked" />
             <Button Text="OK" Clicked="OkClicked" />

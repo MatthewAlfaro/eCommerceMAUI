@@ -1,36 +1,47 @@
-﻿using Amazon.Library.Services;
+﻿using Amazon.Library.Models;
+using Amazon.Library.Services;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using Microsoft.Maui.Controls;
-using Amazon.Library.Models;
 
 namespace eCommerce.MAUI.ViewModels
 {
+    // ViewModel for managing the wishlist view
     public class WishlistViewModel : INotifyPropertyChanged
     {
-        public ObservableCollection<ProductViewModel> Products { get; private set; }
-        public ObservableCollection<ProductViewModel> CartItems { get; private set; }
-        public ObservableCollection<Wishlist> Wishlists => ShoppingCartService.Current.Wishlists;
-        public decimal TotalPrice => ShoppingCartService.Current.TotalPrice;
+        public ObservableCollection<ProductViewModel> Products { get; private set; } 
+        public ObservableCollection<ProductViewModel> CartItems { get; private set; } 
+        public ObservableCollection<ShoppingCart> ShoppingCarts => ShoppingCartService.Current.ShoppingCarts; 
+        public decimal TotalPrice => ShoppingCartService.Current.TotalPrice; 
 
-        public ICommand LoadWishlistCommand { get; private set; }
-        public ICommand DeleteWishlistCommand { get; private set; }
+        // Commands for UI interaction
+        public ICommand LoadShoppingCartCommand { get; private set; }
+        public ICommand DeleteShoppingCartCommand { get; private set; }
         public ICommand RemoveFromCartCommand { get; private set; }
 
         public WishlistViewModel()
         {
             Products = new ObservableCollection<ProductViewModel>();
             CartItems = new ObservableCollection<ProductViewModel>();
-            LoadWishlistCommand = new Command<Wishlist>(LoadWishlist);
-            DeleteWishlistCommand = new Command<Wishlist>(DeleteWishlist);
+            LoadShoppingCartCommand = new Command<ShoppingCart>(LoadShoppingCart);
+            DeleteShoppingCartCommand = new Command<ShoppingCart>(DeleteShoppingCart);
             RemoveFromCartCommand = new Command<ProductViewModel>(RemoveFromCart);
 
+            // Inventory updates
+            InventoryService.Current.InventoryUpdated += OnInventoryUpdated;
             LoadProducts();
         }
 
+        // Event handler for inventory updates
+        private void OnInventoryUpdated()
+        {
+            LoadProducts();
+        }
+
+        // Load products from the inventory service
         private void LoadProducts()
         {
             var products = InventoryService.Current.Products;
@@ -41,6 +52,7 @@ namespace eCommerce.MAUI.ViewModels
             }
         }
 
+        // Add a product to the cart
         public void AddToCart(ProductViewModel productViewModel, int quantity)
         {
             var product = productViewModel.Model;
@@ -49,6 +61,7 @@ namespace eCommerce.MAUI.ViewModels
             UpdateCartItems();
         }
 
+        // Remove a product from the cart
         public void RemoveFromCart(ProductViewModel productViewModel)
         {
             var product = productViewModel.Model;
@@ -56,6 +69,7 @@ namespace eCommerce.MAUI.ViewModels
             UpdateCartItems();
         }
 
+        // Update the list of items in the cart and the total price
         private void UpdateCartItems()
         {
             CartItems.Clear();
@@ -67,27 +81,32 @@ namespace eCommerce.MAUI.ViewModels
             NotifyPropertyChanged(nameof(TotalPrice));
         }
 
-        public void SaveWishlist(string name)
+        // Save the current cart as a shopping cart
+        public void SaveShoppingCart(string name)
         {
-            ShoppingCartService.Current.SaveWishlist(name);
+            ShoppingCartService.Current.SaveShoppingCart(name);
             UpdateCartItems();
-            NotifyPropertyChanged(nameof(Wishlists));
+            NotifyPropertyChanged(nameof(ShoppingCarts));
         }
 
-        public void LoadWishlist(Wishlist wishlist)
+        // Load a saved shopping cart
+        public void LoadShoppingCart(ShoppingCart shoppingCart)
         {
-            ShoppingCartService.Current.LoadWishlist(wishlist);
+            ShoppingCartService.Current.LoadShoppingCart(shoppingCart);
             UpdateCartItems();
         }
 
-        public void DeleteWishlist(Wishlist wishlist)
+        // Delete a saved shopping cart
+        public void DeleteShoppingCart(ShoppingCart shoppingCart)
         {
-            ShoppingCartService.Current.DeleteWishlist(wishlist);
-            NotifyPropertyChanged(nameof(Wishlists));
+            ShoppingCartService.Current.DeleteShoppingCart(shoppingCart);
+            NotifyPropertyChanged(nameof(ShoppingCarts));
         }
 
+        // Notifying the UI of property changes
         public event PropertyChangedEventHandler PropertyChanged;
 
+        // Method to invoke the PropertyChanged event
         private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

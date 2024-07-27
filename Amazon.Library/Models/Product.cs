@@ -7,8 +7,7 @@
         public decimal Price { get; set; }
         public int Id { get; set; }
         public int Quantity { get; set; }
-        public bool IsBuyOneGetOneFree { get; set; } // BOGO property
-
-        public decimal MarkdownPercentage { get; set; } // Markdown property
+        public bool IsBuyOneGetOneFree { get; set; } 
+        public decimal MarkdownPercentage { get; set; }
     }
 }

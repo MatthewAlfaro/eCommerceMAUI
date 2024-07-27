@@ -4,6 +4,8 @@
              Title="Inventory Manager"
              NavigatedTo="ContentPage_NavigatedTo">
     <VerticalStackLayout>
+        
+        <!-- List of Products -->
         <ListView ItemsSource="{Binding Products}">
             <ListView.ItemTemplate>
                 <DataTemplate>
@@ -11,23 +13,20 @@
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
-                                <!-- Id -->
                                 <ColumnDefinition Width="Auto"/>
-                                <!-- Price -->
                                 <ColumnDefinition Width="*"/>
-                                <!-- Name -->
                                 <ColumnDefinition Width="Auto"/>
-                                <!-- Quantity -->
                                 <ColumnDefinition Width="Auto"/>
-                                <!-- Edit -->
                                 <ColumnDefinition Width="Auto"/>
-                                <!-- Delete -->
                             </Grid.ColumnDefinitions>
-
+                            
+                            <!-- Product Details -->
                             <Label Grid.Column="0" Text="{Binding Model.Id}" />
                             <Label Grid.Column="1" Text="{Binding DisplayPrice}" />
                             <Label Grid.Column="2" Text="{Binding Model.Name}" />
                             <Label Grid.Column="3" Text="{Binding Model.Quantity}" />
+                            
+                            <!-- Edit and Delete Buttons -->
                             <Button Grid.Column="4" Text="Edit" Clicked="EditClicked" CommandParameter="{Binding}" />
                             <Button Grid.Column="5" Text="Delete" Clicked="DeleteClicked" CommandParameter="{Binding}" />
                         </Grid>
@@ -35,8 +34,8 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-
-
+        
+        <!-- Add and Cancel Buttons -->
         <Button Text="Add Product" Clicked="AddClicked" />
         <Button Text="Cancel" Clicked="CancelClicked" />
     </VerticalStackLayout>

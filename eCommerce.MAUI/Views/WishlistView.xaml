@@ -5,6 +5,8 @@
              Title="Wish List Creator"
              x:Name="wishlistPage">
     <VerticalStackLayout>
+        
+        <!-- List of Products -->
         <ListView ItemsSource="{Binding Products}">
             <ListView.ItemTemplate>
                 <DataTemplate>
@@ -18,10 +20,14 @@
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
+                            
+                            <!-- Product Details -->
                             <Label Grid.Column="0" Text="{Binding Model.Id}" />
                             <Label Grid.Column="1" Text="{Binding DisplayPrice}" />
                             <Label Grid.Column="2" Text="{Binding Model.Name}" />
                             <Label Grid.Column="3" Text="{Binding Quantity}" />
+                            
+                            <!-- Add to Cart -->
                             <Entry Grid.Column="4" Placeholder="Qty" x:Name="quantityEntry" WidthRequest="50"/>
                             <Button Grid.Column="5" Text="Add to Cart" Clicked="AddToCartClicked" CommandParameter="{Binding .}" />
                         </Grid>
@@ -30,6 +36,7 @@
             </ListView.ItemTemplate>
         </ListView>
 
+        <!-- Cart Items List -->
         <ListView ItemsSource="{Binding CartItems}">
             <ListView.ItemTemplate>
                 <DataTemplate>
@@ -40,6 +47,8 @@
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
+                            
+                            <!-- Cart Item Details -->
                             <Label Grid.Column="0" Text="{Binding Model.Name}" />
                             <Label Grid.Column="1" Text="{Binding Quantity}" />
                             <Button Grid.Column="2" Text="Remove" Command="{Binding Path=BindingContext.RemoveFromCartCommand, Source={x:Reference wishlistPage}}" CommandParameter="{Binding .}" />
@@ -49,19 +58,22 @@
             </ListView.ItemTemplate>
         </ListView>
 
+        <!-- Total Price and Save Wishlist -->
         <Label Text="{Binding TotalPrice, StringFormat='Total: {0:C}'}" FontSize="Large" HorizontalOptions="Center"/>
         <Entry x:Name="wishlistNameEntry" Placeholder="Wishlist Name"/>
         <Button Text="Save Wishlist" Clicked="SaveWishlistClicked"/>
 
         <!-- Wishlist Management -->
-        <ListView ItemsSource="{Binding Wishlists}">
+        <ListView ItemsSource="{Binding ShoppingCarts}">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
                         <StackLayout Orientation="Horizontal">
+                            
+                            <!-- Shopping Cart Details -->
                             <Label Text="{Binding Name}" />
-                            <Button Text="Load" Clicked="LoadWishlistClicked" CommandParameter="{Binding .}" />
-                            <Button Text="Delete" Clicked="DeleteWishlistClicked" CommandParameter="{Binding .}" />
+                            <Button Text="Load" Clicked="LoadShoppingCartClicked" CommandParameter="{Binding .}" />
+                            <Button Text="Delete" Clicked="DeleteShoppingCartClicked" CommandParameter="{Binding .}" />
                         </StackLayout>
                     </ViewCell>
                 </DataTemplate>

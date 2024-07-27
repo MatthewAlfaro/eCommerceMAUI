@@ -19,6 +19,7 @@ namespace eCommerce.MAUI.Views
 
         private void AddToCartClicked(object sender, EventArgs e)
         {
+            // Add product to the cart
             var button = sender as Button;
             var productViewModel = button?.CommandParameter as ProductViewModel;
 
@@ -29,21 +30,21 @@ namespace eCommerce.MAUI.Views
                 {
                     (BindingContext as ShopViewModel)?.AddToCart(productViewModel, quantity);
 
-                    // Clear the quantity entry after adding to cart
                     entry.Text = string.Empty;
                 }
             }
         }
-        private void LoadWishlistClicked(object sender, EventArgs e)
-        {
-            var button = sender as Button;
-            var wishlist = button?.CommandParameter as Wishlist;
 
-            if (wishlist != null)
+        private void LoadShoppingCartClicked(object sender, EventArgs e)
+        {
+            // Load the selected shopping cart
+            var button = sender as Button;
+            var shoppingCart = button?.CommandParameter as ShoppingCart;
+
+            if (shoppingCart != null)
             {
-                (BindingContext as ShopViewModel)?.LoadWishlist(wishlist);
+                (BindingContext as ShopViewModel)?.LoadShoppingCart(shoppingCart);
             }
         }
     }
 }
-
